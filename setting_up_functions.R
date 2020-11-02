@@ -13,6 +13,7 @@
 library(tidyverse)
 library(mvtnorm)
 library(politicaldata)
+library(ggtext)
 
 # Draw Samples Function ---------------------------------------------------------
 logit <- function(x) log(x/(1-x))
@@ -184,7 +185,7 @@ names(mu) <- colnames(sim_forecast)
 
 # Adding Gauge Function for plotting --------------------------------------
 
-gg.gauge <- function(pos, breaks = c(0, 33, 66, 100), determinent) {
+gg.gauge <- function(pos, breaks = c(0, 33, 66, 100), determinent, Biden_win_prob, trump_win_prob) {
   # get time
   t <- Sys.time()
   t_string <- strftime(t,"%I:%M %p")
@@ -214,18 +215,27 @@ gg.gauge <- function(pos, breaks = c(0, 33, 66, 100), determinent) {
     annotate("text", x  = 0, y = -.1,label=paste(determinent,"%"),vjust=0,size=8,  fontface="bold")+
     coord_fixed()+
     theme_bw()+
-    theme(axis.text=element_blank(),
-          axis.title=element_blank(),
+    labs(
+      title = case_when(Biden_win_prob>=90~"<span style='color: #2E74C0'>**Biden**</span> is Clearly Favored to Win",
+                        Biden_win_prob<90 & Biden_win_prob>=75~"<span style='color: #2E74C0'>**Biden**</span> is Favored to Win",
+                        Biden_win_prob<75 & Biden_win_prob>=55~"<span style='color: #2E74C0'>**Biden**</span> is Somewhat Favored to Win",
+                        
+                        Biden_win_prob<55 & Biden_win_prob>=45~"It is a Tossup",
+                        
+                        Biden_win_prob<45 & Biden_win_prob>=25~"<span style='color: #CB454A'>**Trump**</span> is Somewhat Favored to Win",
+                        Biden_win_prob<25 & Biden_win_prob>=10~paste0("<span style='color: #CB454A'>**Trump**</span> is Favored to Win"),
+                        Biden_win_prob<10~"<span style='color: #CB454A'>**Trump**</span> is Clearly Favored to Win"),
+      caption= cap
+    ) + 
+    theme(plot.title = element_markdown(face = "bold", size = rel(2), hjust = .5),
+          plot.subtitle = element_text(face = "plain", size = rel(1), color = "grey70"),
+          legend.position = "none",
+          axis.title = element_blank(),
+          axis.text=element_blank(),
           axis.ticks=element_blank(),
           panel.grid=element_blank(),
           panel.border=element_blank(),
-          legend.position = "none",
-          text = element_text(family="Roboto"),
-          plot.caption = element_text(hjust=0.5, size=rel(1.2)))+
-    labs(
-      title = "",
-      caption= cap
-    ) 
+          plot.caption = element_text(hjust=0.5, size=rel(1.2)))
 }
 
 

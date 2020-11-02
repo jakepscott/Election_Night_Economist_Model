@@ -12,13 +12,14 @@ library(ggtext)
 source("setting_up_functions.R")
 
 # Get Model Results Once --------------------------------------------------
-results <- update_prob_for_viz(biden_states = "FL")
+results <- update_prob_for_viz()
 
 
 # Gauge Function ----------------------------------------------------------
 Biden_Gauge_Function <- function(results){
   biden_win_prob <- results$nation$biden_win_prob
-  gg.gauge(pos=round(biden_win_prob,1),determinent = round(biden_win_prob,1))
+  trump_win_prob <- 100-results$nation$biden_win_prob
+  gg.gauge(pos=round(biden_win_prob,1),determinent = round(biden_win_prob,1), Biden_win_prob=biden_win_prob, trump_win_prob=trump_win_prob)
 }
 
 Biden_Gauge_Function(results)  
@@ -123,10 +124,15 @@ prop_over_time <- prop_over_time %>% rbind(tibble(biden_win_prob=results$nation$
                                                   trump_win_prob=100-biden_win_prob,
                                                   timestamp=Sys.time()))
 
+#Getting image table
+icons <- tibble(Candidate=c("biden_win_prob","trump_win_prob"),
+                icon=c("pngs/bidentransparent.png","pngs/trumptransparent.png"))
+
 
 prop_over_time %>% pivot_longer(cols=biden_win_prob:trump_win_prob,
                                 names_to="Candidate", 
                                 values_to="Win_Prob") %>% 
+  left_join(icons) %>% 
   ggplot() +
   geom_line(aes(x=timestamp,y=Win_Prob,color=Candidate),size=2) +
   scale_color_manual(values = c("#2E74C0","#CB454A")) +
