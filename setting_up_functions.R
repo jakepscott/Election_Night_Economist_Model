@@ -77,7 +77,7 @@ update_prob_for_viz <- function(biden_states = NULL, trump_states = NULL, biden_
 sim_forecast <- read_csv('https://cdn.economistdatateam.com/us-2020-forecast/data/president/electoral_college_simulations.csv') 
 
 # select relevant columns and make the data frae into a matrix
-sim_forecast <- sim_forecast %>% select(4:ncol(.))
+sim_forecast <- sim_forecast %>% dplyr::select(4:ncol(.))
 sim_forecast <- list(sim_forecast,sim_forecast,sim_forecast,sim_forecast,sim_forecast) %>% bind_rows  %>% as.matrix
 
 
@@ -122,7 +122,7 @@ ev <- c(ev, "ME1" = 1, "ME2" = 1, "NE1" = 1, "NE2" = 1, "NE3" = 1)
 
 # create simulations for ME and NE districts
 me_ne_leans <- politicaldata::pres_results_by_cd %>% filter(year >= 2012, state_abb %in% c("ME","NE")) %>%
-  select(-other) %>% 
+  dplyr::select(-other) %>% 
   rename(state = state_abb) %>%
   group_by(year,state) %>%
   mutate(sum_pct = dem + rep,

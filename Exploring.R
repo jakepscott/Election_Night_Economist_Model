@@ -10,23 +10,22 @@ library(scales)
 # Get functions -----------------------------------------------------------
 source("setting_up_functions.R")
 
+# Get Model Results Once --------------------------------------------------
+results <- update_prob_for_viz()
+
 
 # Gauge Function ----------------------------------------------------------
-Biden_Gauge_Function <- function(d_states=NULL,r_states=NULL){
-  results <- update_prob_for_viz(biden_states = d_states, trump_states = r_states)
+Biden_Gauge_Function <- function(results){
   biden_win_prob <- results$nation$biden_win_prob
-  
   gg.gauge(pos=round(biden_win_prob,1),determinent = round(biden_win_prob,1))
 }
 
-Biden_Gauge_Function()  
+Biden_Gauge_Function(results)  
+#ggsave("Figures/gauge.png",dpi=600)
 
 
 # Table Function ----------------------------------------------------------
-table_function <- function(d_states=NULL,r_states=NULL) {
-  results <- update_prob_for_viz(biden_states = d_states,
-                                 trump_states = r_states)
-  
+table_function <- function(results) {
   states <- cbind(state.name,state.abb) %>% as_tibble()
   
   table_data <- results$states %>% 
@@ -37,7 +36,7 @@ table_function <- function(d_states=NULL,r_states=NULL) {
                              state.name)) %>% 
     arrange(desc(value)) %>% 
     mutate(value=round(value,1)) %>% 
-    select(state.name,value)
+    dplyr::select(state.name,value)
   
   top <- table_data %>% head(nrow(table_data)/2)
   bottom<- table_data %>% tail(nrow(table_data)/2) %>% rename("state"=state.name,"percent"=value)
@@ -72,13 +71,11 @@ table_function <- function(d_states=NULL,r_states=NULL) {
       ))
 }
 
-table_function()
+(table <- table_function(results))
+#gtsave(table,"Figures/table.png")
 
 # Map Function ------------------------------------------------------------
-map_function <- function(d_states=NULL,r_states=NULL) {
-  results <- update_prob_for_viz(biden_states = d_states,
-                                 trump_states = r_states)
-  
+map_function <- function(results) {
   states <- cbind(state.name,state.abb) %>% as_tibble()
   
   map_data <- results$states %>% 
@@ -94,7 +91,7 @@ map_function <- function(d_states=NULL,r_states=NULL) {
     dplyr::select(name=state.name,value) %>% 
     mutate(label=paste0("Biden Win Probability: ", value, "%"))
   
-  plot <- left_join(usa_sf(),map_data) %>% 
+  plot <- left_join(usa_sf(proj = "laea"),map_data) %>% 
     ggplot() +
     geom_sf(aes(fill=value,text=label)) +
     scale_fill_gradient(low = "#CB454A",
@@ -110,8 +107,7 @@ map_function <- function(d_states=NULL,r_states=NULL) {
     style(hoveron="fills") 
 }
 
-map_function(d_states = "TX")
-
+map_function(results)
 
 # Line Graph Function -----------------------------------------------------
 
