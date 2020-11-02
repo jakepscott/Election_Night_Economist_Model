@@ -6,12 +6,13 @@ library(usmap)
 library(albersusa)
 library(qpcR)
 library(scales)
+library(ggtext)
 
 # Get functions -----------------------------------------------------------
 source("setting_up_functions.R")
 
 # Get Model Results Once --------------------------------------------------
-results <- update_prob_for_viz()
+results <- update_prob_for_viz(biden_states = "FL")
 
 
 # Gauge Function ----------------------------------------------------------
@@ -110,21 +111,42 @@ map_function <- function(results) {
 map_function(results)
 
 # Line Graph Function -----------------------------------------------------
+results <- update_prob_for_viz(trump_states = "FL")
+Biden_win_prob <- results$nation$biden_win_prob
+trump_win_prob <- 100-results$nation$biden_win_prob
 
-time <- seq(from = as.POSIXct("2020-11-01 06:00:00", format="%Y-%m-%d %H:%M:%S"),
-                 to = Sys.time(),
-                 by = "min") %>% as_tibble()
+# prop_over_time <- tibble(biden_win_prob=results$nation$biden_win_prob,
+#                          trump_win_prob=100-biden_win_prob,
+#                          timestamp=Sys.time())
 
-biden_win <- c(rnorm(100,0,10),rep(NA,nrow(seq(from = as.POSIXct("2020-11-01 06:00:00", format="%Y-%m-%d %H:%M:%S"),
-                                             to = Sys.time(),
-                                             by = "min") %>% as_tibble())-100))
-test <- cbind(time,biden_win) %>% as_tibble() %>% rename("biden"=biden_win,
-                                                         "time_axis"=value)
+prop_over_time <- prop_over_time %>% rbind(tibble(biden_win_prob=results$nation$biden_win_prob,
+                                                  trump_win_prob=100-biden_win_prob,
+                                                  timestamp=Sys.time()))
 
-ggplot(test) + 
-  geom_line(aes(x=time_axis,y=biden)) +
-  scale_x_datetime(labels = date_format("%Y-%m-%d %H"),
-                   date_breaks = "1 hour") +
-  theme(axis.text.x = element_text(angle = 90))
+
+prop_over_time %>% pivot_longer(cols=biden_win_prob:trump_win_prob,
+                                names_to="Candidate", 
+                                values_to="Win_Prob") %>% 
+  ggplot() +
+  geom_line(aes(x=timestamp,y=Win_Prob,color=Candidate),size=2) +
+  scale_color_manual(values = c("#2E74C0","#CB454A")) +
+  scale_x_datetime(breaks = date_breaks("1 hour"), labels = date_format("%a %I:%M",
+                                                                        tz = "EST")) +
+  labs(title=case_when(Biden_win_prob>=55~paste0("<span style='color: #2E74C0'>**Biden**</span> has a ", round(Biden_win_prob,1),"% chance to win the election"),
+                       
+                       Biden_win_prob<55 & Biden_win_prob>=45~paste0("It's a Tossup, <span style='color: #2E74C0'>**Biden**</span> has a ", round(Biden_win_prob,1), "% chance to win"),
+                       
+                       Biden_win_prob<45~paste0("<span style='color: #CB454A'>**Trump**</span> has a ", round(trump_win_prob,1),"% chance to win the election")),
+       subtitle = "Win Probability") +
+  theme_minimal(base_size = 12, base_family = "Roboto Condensed") +
+  theme(panel.grid = element_blank(),
+        plot.title = element_markdown(face = "bold", size = rel(3)),
+        plot.subtitle = element_text(face = "plain", size = rel(1.5), color = "grey70"),
+        axis.text = element_text(size=rel(1)),
+        legend.position = "none",
+        axis.title = element_blank(),
+        plot.title.position = "plot")
+
+
                   
                    
