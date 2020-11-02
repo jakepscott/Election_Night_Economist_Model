@@ -4,6 +4,8 @@ library(tidyverse)
 library(gt)
 library(usmap)
 library(albersusa)
+library(qpcR)
+library(scales)
 
 # Get functions -----------------------------------------------------------
 source("setting_up_functions.R")
@@ -109,3 +111,24 @@ map_function <- function(d_states=NULL,r_states=NULL) {
 }
 
 map_function(d_states = "TX")
+
+
+# Line Graph Function -----------------------------------------------------
+
+time <- seq(from = as.POSIXct("2020-11-01 06:00:00", format="%Y-%m-%d %H:%M:%S"),
+                 to = Sys.time(),
+                 by = "min") %>% as_tibble()
+
+biden_win <- c(rnorm(100,0,10),rep(NA,nrow(seq(from = as.POSIXct("2020-11-01 06:00:00", format="%Y-%m-%d %H:%M:%S"),
+                                             to = Sys.time(),
+                                             by = "min") %>% as_tibble())-100))
+test <- cbind(time,biden_win) %>% as_tibble() %>% rename("biden"=biden_win,
+                                                         "time_axis"=value)
+
+ggplot(test) + 
+  geom_line(aes(x=time_axis,y=biden)) +
+  scale_x_datetime(labels = date_format("%Y-%m-%d %H"),
+                   date_breaks = "1 hour") +
+  theme(axis.text.x = element_text(angle = 90))
+                  
+                   
