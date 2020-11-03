@@ -40,13 +40,15 @@ ui <- fluidPage(
 server <- function(input, output) {
   #Reative Values
   Data <- reactive({
-    invalidateLater(30000)
+    invalidateLater(10000)
     sheet <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1LbSqNHmUzWinRjGDtWsnrM1Kkn7JS5nWxD3le8U7OfA/edit#gid=0")
     Biden_Wins <- sheet %>% filter(State_Winner=="Biden") %>% pull(State)
     Trump_Wins <- sheet %>% filter(State_Winner=="Trump") %>% pull(State)
     results <- update_prob_for_viz(biden_states = Biden_Wins,trump_states = Trump_Wins)
     results
   })
+  
+  Start_Time <- reactive({Sys.time()})
 
 
 # Generating Table --------------------------------------------------------
@@ -70,6 +72,7 @@ server <- function(input, output) {
     Biden_win_prob <-Data()$nation$biden_win_prob
     trump_win_prob <- 100-Data()$nation$biden_win_prob
 
+    
     prop_over_time <- tibble(biden_win_prob=Data()$nation$biden_win_prob,
                              trump_win_prob=100-biden_win_prob,
                              timestamp=Sys.time())
@@ -93,7 +96,7 @@ server <- function(input, output) {
       geom_line(aes(x=timestamp,y=Win_Prob,color=Candidate),size=2) +
       geom_image(aes(x=max(timestamp),y=current_prob,image=icon), asp = 2, size = .04) +
       scale_color_manual(values = c("#2E74C0","#CB454A")) +
-      scale_x_datetime(breaks = date_breaks("30 min"), labels = date_format("%a %I:%M",
+      scale_x_datetime(breaks = date_breaks("1 min"), labels = date_format("%a %I:%M",
                                                                             tz = "EST")) +
       labs(title="How win probability has changed over time") +
       theme_minimal(base_size = 12, base_family = "Roboto Condensed") +
