@@ -113,13 +113,12 @@ map_function <- function(results) {
 map_function(results)
 
 # Line Graph Function -----------------------------------------------------
-results <- update_prob_for_viz()
 Biden_win_prob <- results$nation$biden_win_prob
 trump_win_prob <- 100-results$nation$biden_win_prob
 
-# prop_over_time <- tibble(biden_win_prob=results$nation$biden_win_prob,
-#                          trump_win_prob=100-biden_win_prob,
-#                          timestamp=Sys.time())
+prop_over_time <- tibble(biden_win_prob=results$nation$biden_win_prob,
+                        trump_win_prob=100-biden_win_prob,
+                       timestamp=Sys.time())
 
 prop_over_time <- prop_over_time %>% rbind(tibble(biden_win_prob=results$nation$biden_win_prob,
                                                   trump_win_prob=100-biden_win_prob,
