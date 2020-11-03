@@ -88,7 +88,7 @@ server <- function(input, output) {
       left_join(icons) %>%
       ggplot() +
       geom_line(aes(x=timestamp,y=Win_Prob,color=Candidate),size=2) +
-      geom_image(aes(x=max(timestamp),y=current_prob,image=icon), asp = 1.6, size = .04) +
+      geom_image(aes(x=max(timestamp),y=current_prob,image=icon), asp =3, size = .04) +
       scale_color_manual(values = c("#2E74C0","#CB454A")) +
       scale_x_datetime(breaks = date_breaks("1 hour"), labels = date_format("%a %I:%M",
                                                                             tz = "EST")) +
