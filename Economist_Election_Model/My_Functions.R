@@ -117,7 +117,6 @@ table_function <- function(results) {
       table.border.bottom.color = "white",
       table.border.bottom.width = px(3),
       heading.align = "center",
-      table.font.names = "Roboto Condensed",
       table.font.size = 13
     ) %>% 
     cols_label(state.name="",value="Win Probability",state="","percent"="Win Probability") %>% 
@@ -157,8 +156,8 @@ plot <- left_join(USA_Map,map_data) %>%
   scale_fill_gradient(low = "#CB454A",
                       high = "#2E74C0")+
   labs(title="Where Biden is favored to <span style='color: #2E74C0'>win</span> versus <span style='color: #CB454A'>lose</span> ") +
-  theme_minimal(base_family = "Roboto Condensed",base_size = 12) +
-  theme(title=element_markdown(size=rel(1.25),face="bold", hjust = .5),
+  theme_minimal(base_size = 12) +
+  theme(title=element_markdown(size=rel(1),face="bold", hjust = .5),
         axis.title = element_blank(),
         axis.text = element_blank(),
         panel.grid = element_blank(),

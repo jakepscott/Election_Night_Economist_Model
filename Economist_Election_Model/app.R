@@ -95,13 +95,15 @@ server <- function(input, output) {
       scale_y_continuous(breaks = seq(0,100,by = 10), labels = seq(0,100,by=10)) +
       # coord_cartesian(xlim = c(as.POSIXct("2020-11-03 18:00:00 EST"),
       #                          as.POSIXct("2020-11-04 4:00:00 EST"))) +
-      labs(title="How win probability has changed over time") +
-      theme_minimal(base_size = 12, base_family = "Roboto Condensed") +
+      coord_cartesian(ylim=c(0,100)) +
+      labs(title="How win probability has changed over time",
+           subtitle = "Updated every 2 minutes, may differ temporarily from needle") +
+      theme_minimal(base_size = 12) +
       theme(panel.grid.major.x = element_blank(),
             panel.grid.minor.x = element_blank(),
             panel.grid.minor.y = element_blank(),
             plot.title = element_markdown(face = "bold", size = rel(3),hjust=.5),
-            plot.subtitle = element_text(face = "plain", size = rel(1.5), color = "grey70"),
+            plot.subtitle = element_text(face = "plain", size = rel(1.5), color = "grey70", hjust =. 5),
             axis.text.y = element_text(size=rel(1)),
             axis.text.x = element_text(size=rel(.75)),
             legend.position = "none",
