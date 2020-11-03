@@ -41,14 +41,18 @@ server <- function(input, output) {
   #Reative Values
   Data <- reactive({
     invalidateLater(10000)
-    sheet <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1LbSqNHmUzWinRjGDtWsnrM1Kkn7JS5nWxD3le8U7OfA/edit#gid=0")
+    sheet <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1ZPvodyP0oWZe6PqKs2UfjuXIj1c8OXZqI6FyeH-fOl4/edit?usp=sharing")
     Biden_Wins <- sheet %>% filter(State_Winner=="Biden") %>% pull(State)
     Trump_Wins <- sheet %>% filter(State_Winner=="Trump") %>% pull(State)
     results <- update_prob_for_viz(biden_states = Biden_Wins,trump_states = Trump_Wins)
     results
   })
   
-  Start_Time <- reactive({Sys.time()})
+  Line_Chart <- reactive({
+    invalidateLater(10000)
+    gsheet2tbl("https://docs.google.com/spreadsheets/d/11jfJHudH0yVPXvNKO7g3cKFSayBrKkeeaVRO4KHHO0A/edit?usp=sharing")
+  })
+  
 
 
 # Generating Table --------------------------------------------------------
@@ -96,8 +100,10 @@ server <- function(input, output) {
       geom_line(aes(x=timestamp,y=Win_Prob,color=Candidate),size=2) +
       geom_image(aes(x=max(timestamp),y=current_prob,image=icon), asp = 2, size = .04) +
       scale_color_manual(values = c("#2E74C0","#CB454A")) +
-      scale_x_datetime(breaks = date_breaks("1 min"), labels = date_format("%a %I:%M",
+      scale_x_datetime(breaks = date_breaks("1 hour"), labels = date_format("%a %I:%M",
                                                                             tz = "EST")) +
+      coord_cartesian(xlim = c(as.POSIXct("2020-11-03 18:00:00 EST"),
+                               as.POSIXct("2020-11-04 4:00:00 EST"))) +
       labs(title="How win probability has changed over time") +
       theme_minimal(base_size = 12, base_family = "Roboto Condensed") +
       theme(panel.grid = element_blank(),
