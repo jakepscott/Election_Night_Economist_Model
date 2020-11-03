@@ -95,32 +95,39 @@ table_function <- function(results) {
   bottom<- table_data %>% tail(nrow(table_data)/2) %>% rename("state"=state.name,"percent"=value)
   table_data <- cbind(top,bottom)
   
+  
+  #browser()
   table_data %>% 
+    mutate(value = value / 100,
+           percent = percent / 100) %>%
     #Initializing table
     gt() %>% 
     #Setting title
     tab_header(title = "Biden Win Probability by State") %>% 
+    fmt_percent(columns = c(2,4), decimals = 1) %>%
+    cols_align(align = "center", columns = ) %>%
     tab_options(
+      data_row.padding = px(5),
       table.border.top.color = "white",
       column_labels.border.top.color = "white",
       column_labels.border.top.width = px(3),
       column_labels.border.bottom.color = "black",
-      table_body.hlines.color = "white",
       table.border.bottom.color = "white",
       table.border.bottom.width = px(3),
       heading.align = "center",
-      table.font.names = "Roboto Condensed"
+      table.font.names = "Roboto Condensed",
+      table.font.size = 13
     ) %>% 
     cols_label(state.name="",value="Win Probability",state="","percent"="Win Probability") %>% 
     cols_align(align = "left",
-               columns = c(1,2)) %>%
-    cols_align(align = "right",
-               columns = c(3,4)) %>% 
+               columns = c(1,3)) %>%
+    cols_align(align = "center",
+               columns = c(2,4)) %>% 
     data_color(
       columns = vars(value,percent),
       colors = scales::col_numeric(
         palette = c("#CB454A", "#2E74C0"),
-        domain = c(0,100)
+        domain = c(0,1)
       ))
 }
 
@@ -148,7 +155,7 @@ plot <- left_join(usa_sf(proj = "laea"),map_data) %>%
                       high = "#2E74C0")+
   labs(title="Where Biden is favored to <span style='color: #2E74C0'>win</span> versus <span style='color: #CB454A'>lose</span> ") +
   theme_minimal(base_family = "Roboto Condensed",base_size = 12) +
-  theme(title=element_markdown(size=rel(1),face="bold", hjust = .5),
+  theme(title=element_markdown(size=rel(1.25),face="bold", hjust = .5),
         axis.title = element_blank(),
         axis.text = element_blank(),
         panel.grid = element_blank(),

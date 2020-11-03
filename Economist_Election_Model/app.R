@@ -1,15 +1,19 @@
 library(shiny)
 library(plotly)
+library(gsheet)
+
 setwd("C:/Users/Jake Scott/Desktop/R Projects/Election_Night_Economist_Model")
 source("My_Functions.R")
 
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-  tags$head(tags$style(
-    HTML('
-         #sidebar {
-            background-color: #dec4de;
-        }'))),
+  # avoid greying out plot while recalculating
+  tags$style(type="text/css",
+             ".recalculating {opacity: 1.0;};
+               .row {font-family: 'Roboto';}
+               .container-fluid {font-family: 'Roboto';}"
+  ),
   
   sidebarLayout(
     # Sidebar with a slider input
@@ -31,39 +35,46 @@ ui <- fluidPage(
   )
 )
 
-# Define server logic required to draw a histogram
+
+# Server Side -------------------------------------------------------------
 server <- function(input, output) {
   #Reative Values
-  reactives <- reactiveValues()
-  reactives$results <- update_prob_for_viz()
+  Data <- reactive({
+    invalidateLater(30000)
+    sheet <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1LbSqNHmUzWinRjGDtWsnrM1Kkn7JS5nWxD3le8U7OfA/edit#gid=0")
+    Biden_Wins <- sheet %>% filter(State_Winner=="Biden") %>% pull(State)
+    Trump_Wins <- sheet %>% filter(State_Winner=="Trump") %>% pull(State)
+    results <- update_prob_for_viz(biden_states = Biden_Wins,trump_states = Trump_Wins)
+    results
+  })
 
 
 # Generating Table --------------------------------------------------------
   output$table <- render_gt(
-    table_function(reactives$results)
+    table_function(Data())
   )
   
 
 # Generating Map ----------------------------------------------------------
   output$map <- renderPlotly(
-    map_function(reactives$results)
+    map_function(Data())
   )
 
 # Generating Gauge --------------------------------------------------------
   output$gauge <- renderPlot(
-    Biden_Gauge_Function(reactives$results)
+    Biden_Gauge_Function(Data())
   )
 
 # Generating Line Plot ----------------------------------------------------
   output$lineplot <- renderPlot({
-    Biden_win_prob <- reactives$results$nation$biden_win_prob
-    trump_win_prob <- 100-reactives$results$nation$biden_win_prob
+    Biden_win_prob <-Data()$nation$biden_win_prob
+    trump_win_prob <- 100-Data()$nation$biden_win_prob
 
-    prop_over_time <- tibble(biden_win_prob=reactives$results$nation$biden_win_prob,
+    prop_over_time <- tibble(biden_win_prob=Data()$nation$biden_win_prob,
                              trump_win_prob=100-biden_win_prob,
                              timestamp=Sys.time())
 
-    prop_over_time <- prop_over_time %>% rbind(tibble(biden_win_prob=reactives$results$nation$biden_win_prob,
+    prop_over_time <- prop_over_time %>% rbind(tibble(biden_win_prob=Data()$nation$biden_win_prob,
                                                       trump_win_prob=100-biden_win_prob,
                                                       timestamp=Sys.time()))
 
