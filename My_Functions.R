@@ -46,15 +46,15 @@ gg.gauge <- function(pos, breaks = c(0, 33, 66, 100), determinent, Biden_win_pro
     coord_fixed()+
     theme_bw()+
     labs(
-      title = case_when(Biden_win_prob>=90~"<span style='color: #2E74C0'>**Biden**</span> is Clearly Favored to Win",
-                        Biden_win_prob<90 & Biden_win_prob>=75~"<span style='color: #2E74C0'>**Biden**</span> is Favored to Win",
-                        Biden_win_prob<75 & Biden_win_prob>=55~"<span style='color: #2E74C0'>**Biden**</span> is Somewhat Favored to Win",
+      title = case_when(Biden_win_prob>=90~"Overall, <span style='color: #2E74C0'>**Biden**</span> is clearly favored to win",
+                        Biden_win_prob<90 & Biden_win_prob>=75~"Overall, <span style='color: #2E74C0'>**Biden**</span> is favored to win",
+                        Biden_win_prob<75 & Biden_win_prob>=55~"Overall, <span style='color: #2E74C0'>**Biden**</span> is somewhat favored to win",
                         
-                        Biden_win_prob<55 & Biden_win_prob>=45~"It is a Tossup",
+                        Biden_win_prob<55 & Biden_win_prob>=45~"Overall, it's a tossup",
                         
-                        Biden_win_prob<45 & Biden_win_prob>=25~"<span style='color: #CB454A'>**Trump**</span> is Somewhat Favored to Win",
-                        Biden_win_prob<25 & Biden_win_prob>=10~paste0("<span style='color: #CB454A'>**Trump**</span> is Favored to Win"),
-                        Biden_win_prob<10~"<span style='color: #CB454A'>**Trump**</span> is Clearly Favored to Win"),
+                        Biden_win_prob<45 & Biden_win_prob>=25~"Overall, <span style='color: #CB454A'>**Trump**</span> is somewhat favored to win",
+                        Biden_win_prob<25 & Biden_win_prob>=10~paste0("Overall, <span style='color: #CB454A'>**Trump**</span> is favored to win"),
+                        Biden_win_prob<10~"Overall, <span style='color: #CB454A'>**Trump**</span> is clearly favored to win"),
       caption= cap
     ) + 
     theme(plot.title = element_markdown(face = "bold", size = rel(2), hjust = .5),

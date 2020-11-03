@@ -82,13 +82,9 @@ server <- function(input, output) {
       geom_line(aes(x=timestamp,y=Win_Prob,color=Candidate),size=2) +
       geom_image(aes(x=max(timestamp),y=current_prob,image=icon), asp = 2, size = .04) +
       scale_color_manual(values = c("#2E74C0","#CB454A")) +
-      scale_x_datetime(breaks = date_breaks("1 hour"), labels = date_format("%a %I:%M",
+      scale_x_datetime(breaks = date_breaks("30 min"), labels = date_format("%a %I:%M",
                                                                             tz = "EST")) +
-      labs(title=case_when(Biden_win_prob>=55~paste0("<span style='color: #2E74C0'>**Biden**</span> has a ", round(Biden_win_prob,1),"% chance to win the election"),
-
-                           Biden_win_prob<55 & Biden_win_prob>=45~paste0("It's a Tossup, <span style='color: #2E74C0'>**Biden**</span> has a ", round(Biden_win_prob,1), "% chance to win"),
-
-                           Biden_win_prob<45~paste0("<span style='color: #CB454A'>**Trump**</span> has a ", round(trump_win_prob,1),"% chance to win the election"))) +
+      labs(title="How win probability has changed over time") +
       theme_minimal(base_size = 12, base_family = "Roboto Condensed") +
       theme(panel.grid = element_blank(),
             plot.title = element_markdown(face = "bold", size = rel(3)),
