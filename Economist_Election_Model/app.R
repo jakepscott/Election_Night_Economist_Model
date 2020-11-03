@@ -50,7 +50,8 @@ server <- function(input, output) {
   
   Line_Chart <- reactive({
     invalidateLater(10000)
-    gsheet2tbl("https://docs.google.com/spreadsheets/d/11jfJHudH0yVPXvNKO7g3cKFSayBrKkeeaVRO4KHHO0A/edit?usp=sharing")
+    gsheet2tbl("https://docs.google.com/spreadsheets/d/11jfJHudH0yVPXvNKO7g3cKFSayBrKkeeaVRO4KHHO0A/edit?usp=sharing") %>% 
+      mutate(timestamp=as.POSIXct(timestamp))
   })
   
 
@@ -73,24 +74,12 @@ server <- function(input, output) {
 
 # Generating Line Plot ----------------------------------------------------
   output$lineplot <- renderPlot({
-    Biden_win_prob <-Data()$nation$biden_win_prob
-    trump_win_prob <- 100-Data()$nation$biden_win_prob
-
-    
-    prop_over_time <- tibble(biden_win_prob=Data()$nation$biden_win_prob,
-                             trump_win_prob=100-biden_win_prob,
-                             timestamp=Sys.time())
-
-    prop_over_time <- prop_over_time %>% rbind(tibble(biden_win_prob=Data()$nation$biden_win_prob,
-                                                      trump_win_prob=100-biden_win_prob,
-                                                      timestamp=Sys.time()))
-
     #Getting image table
     icons <- tibble(Candidate=c("biden_win_prob","trump_win_prob"),
                     icon=c("pngs/bidentransparent.png","pngs/trumptransparent.png"))
 
 
-    prop_over_time %>% pivot_longer(cols=biden_win_prob:trump_win_prob,
+    Line_Chart() %>% pivot_longer(cols=biden_win_prob:trump_win_prob,
                                     names_to="Candidate",
                                     values_to="Win_Prob") %>%
       group_by(Candidate) %>%
