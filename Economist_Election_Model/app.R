@@ -1,6 +1,7 @@
 library(shiny)
 library(plotly)
 library(gsheet)
+library(googlesheets4)
 
 setwd("C:/Users/Jake Scott/Desktop/R Projects/Election_Night_Economist_Model")
 source("My_Functions.R")
@@ -50,7 +51,7 @@ server <- function(input, output) {
   
   Line_Chart <- reactive({
     invalidateLater(10000)
-    gsheet2tbl("https://docs.google.com/spreadsheets/d/11jfJHudH0yVPXvNKO7g3cKFSayBrKkeeaVRO4KHHO0A/edit?usp=sharing") %>% 
+    gsheet2tbl("https://docs.google.com/spreadsheets/d/1yQo7vkCQ7F6aMyelJvkKS32RfTGYtA8X1z8s9OKX4sU/edit#gid=1482552590") %>% 
       mutate(timestamp=as.POSIXct(timestamp))
   })
   
@@ -91,8 +92,8 @@ server <- function(input, output) {
       scale_color_manual(values = c("#2E74C0","#CB454A")) +
       scale_x_datetime(breaks = date_breaks("1 hour"), labels = date_format("%a %I:%M",
                                                                             tz = "EST")) +
-      coord_cartesian(xlim = c(as.POSIXct("2020-11-03 18:00:00 EST"),
-                               as.POSIXct("2020-11-04 4:00:00 EST"))) +
+      # coord_cartesian(xlim = c(as.POSIXct("2020-11-03 18:00:00 EST"),
+      #                          as.POSIXct("2020-11-04 4:00:00 EST"))) +
       labs(title="How win probability has changed over time") +
       theme_minimal(base_size = 12, base_family = "Roboto Condensed") +
       theme(panel.grid = element_blank(),
