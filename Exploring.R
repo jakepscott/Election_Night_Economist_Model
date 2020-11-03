@@ -8,6 +8,7 @@ library(qpcR)
 library(scales)
 library(ggtext)
 library(ggimage)
+library(plotly)
 
 # Get functions -----------------------------------------------------------
 source("setting_up_functions.R")

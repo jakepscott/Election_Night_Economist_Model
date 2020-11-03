@@ -11,6 +11,8 @@ library(ggimage)
 # Get economist functions -----------------------------------------------------------
 source("Economist_Functions.R")
 
+
+
 # General Gauge Function --------------------------------------------------
 
 gg.gauge <- function(pos, breaks = c(0, 33, 66, 100), determinent, Biden_win_prob, trump_win_prob) {
@@ -146,7 +148,7 @@ plot <- left_join(usa_sf(proj = "laea"),map_data) %>%
                       high = "#2E74C0")+
   labs(title="Where Biden is favored to <span style='color: #2E74C0'>win</span> versus <span style='color: #CB454A'>lose</span> ") +
   theme_minimal(base_family = "Roboto Condensed",base_size = 12) +
-  theme(title=element_markdown(size=rel(2),face="bold", hjust = .5),
+  theme(title=element_markdown(size=rel(1),face="bold", hjust = .5),
         axis.title = element_blank(),
         axis.text = element_blank(),
         panel.grid = element_blank(),
