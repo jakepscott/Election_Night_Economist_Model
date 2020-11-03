@@ -19,8 +19,8 @@ source("Economist_Functions.R")
 
 gg.gauge <- function(pos, breaks = c(0, 33, 66, 100), determinent, Biden_win_prob, trump_win_prob) {
   # get time
-  t <- Sys.time()
-  t_string <- strftime(t,"%I:%M %p")
+  t <- Sys.time() %>% as.POSIXct(format(),tz="EST")
+  t_string <- strftime(t,"%I:%M %p",tz = "EST")
   
   get.poly <- function(a, b, r1 = 0.5, r2 = 1.0) {
     th.start <- pi * (1 - a / 100)
@@ -34,7 +34,7 @@ gg.gauge <- function(pos, breaks = c(0, 33, 66, 100), determinent, Biden_win_pro
   }
   
   #caption for gauge plot
-  cap <- paste("Biden win probability, last updated at", t_string)
+  cap <- paste("Biden win probability, last updated at", t_string, "EST")
   
   # colors from https://flatuicolors.com/palette/defo
   ggplot() + 

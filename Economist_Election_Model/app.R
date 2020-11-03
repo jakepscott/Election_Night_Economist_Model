@@ -88,16 +88,19 @@ server <- function(input, output) {
       left_join(icons) %>%
       ggplot() +
       geom_line(aes(x=timestamp,y=Win_Prob,color=Candidate),size=2) +
-      geom_image(aes(x=max(timestamp),y=current_prob,image=icon), asp = 2, size = .04) +
+      geom_image(aes(x=max(timestamp),y=current_prob,image=icon), asp = 1.6, size = .04) +
       scale_color_manual(values = c("#2E74C0","#CB454A")) +
       scale_x_datetime(breaks = date_breaks("1 hour"), labels = date_format("%a %I:%M",
                                                                             tz = "EST")) +
+      scale_y_continuous(breaks = seq(0,100,by = 10), labels = seq(0,100,by=10)) +
       # coord_cartesian(xlim = c(as.POSIXct("2020-11-03 18:00:00 EST"),
       #                          as.POSIXct("2020-11-04 4:00:00 EST"))) +
       labs(title="How win probability has changed over time") +
       theme_minimal(base_size = 12, base_family = "Roboto Condensed") +
-      theme(panel.grid = element_blank(),
-            plot.title = element_markdown(face = "bold", size = rel(3)),
+      theme(panel.grid.major.x = element_blank(),
+            panel.grid.minor.x = element_blank(),
+            panel.grid.minor.y = element_blank(),
+            plot.title = element_markdown(face = "bold", size = rel(3),hjust=.5),
             plot.subtitle = element_text(face = "plain", size = rel(1.5), color = "grey70"),
             axis.text.y = element_text(size=rel(1)),
             axis.text.x = element_text(size=rel(.75)),
