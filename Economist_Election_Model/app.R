@@ -3,7 +3,7 @@ library(plotly)
 library(gsheet)
 library(googlesheets4)
 
-setwd("C:/Users/Jake Scott/Desktop/R Projects/Election_Night_Economist_Model")
+#setwd("C:/Users/Jake Scott/Desktop/R Projects/Election_Night_Economist_Model")
 source("My_Functions.R")
 
 
