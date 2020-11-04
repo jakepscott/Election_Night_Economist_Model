@@ -49,6 +49,11 @@ server <- function(input, output) {
     results
   })
   
+  Called <-  reactive({
+    invalidateLater(10000)
+    gsheet2tbl("https://docs.google.com/spreadsheets/d/1ZPvodyP0oWZe6PqKs2UfjuXIj1c8OXZqI6FyeH-fOl4/edit?usp=sharing")
+  })
+  
   Line_Chart <- reactive({
     invalidateLater(10000)
     gsheet2tbl("https://docs.google.com/spreadsheets/d/1yQo7vkCQ7F6aMyelJvkKS32RfTGYtA8X1z8s9OKX4sU/edit#gid=1482552590") %>% 
@@ -59,7 +64,7 @@ server <- function(input, output) {
 
 # Generating Table --------------------------------------------------------
   output$table <- render_gt(
-    table_function(Data())
+    table_function(Data(), Called())
   )
   
 
@@ -75,6 +80,9 @@ server <- function(input, output) {
 
 # Generating Line Plot ----------------------------------------------------
   output$lineplot <- renderPlot({
+    t <- Sys.time() %>% as.POSIXct(format(),tz="EST")
+    t_string <- strftime(t,"%I:%M %p",tz = "EST")
+    
     #Getting image table
     icons <- tibble(Candidate=c("biden_win_prob","trump_win_prob"),
                     icon=c("pngs/bidentransparent.png","pngs/trumptransparent.png"))
@@ -97,15 +105,15 @@ server <- function(input, output) {
       #                          as.POSIXct("2020-11-04 4:00:00 EST"))) +
       coord_cartesian(ylim=c(0,100)) +
       labs(title="How win probability has changed over time",
-           subtitle = "Updated every 2 minutes, may differ temporarily from needle") +
+           subtitle = paste0("Updated every 2 minutes, may differ temporarily from needle. Last updated: ", t_string)) +
       theme_minimal(base_size = 12) +
       theme(panel.grid.major.x = element_blank(),
             panel.grid.minor.x = element_blank(),
             panel.grid.minor.y = element_blank(),
             plot.title = element_markdown(face = "bold", size = rel(3),hjust=.5),
-            plot.subtitle = element_text(face = "plain", size = rel(1.5), color = "grey70", hjust =. 5),
-            axis.text.y = element_text(size=rel(1)),
-            axis.text.x = element_text(size=rel(.75)),
+            plot.subtitle = element_text(face = "plain", size = rel(1.5), color = "grey70", hjust =.5),
+            axis.text.y = element_text(size=rel(1.2)),
+            axis.text.x = element_text(size=rel(1.2)),
             legend.position = "none",
             axis.title = element_blank(),
             plot.title.position = "plot")

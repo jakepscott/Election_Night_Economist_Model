@@ -20,5 +20,5 @@ while (TRUE) {
   "https://docs.google.com/spreadsheets/d/1yQo7vkCQ7F6aMyelJvkKS32RfTGYtA8X1z8s9OKX4sU/edit?usp=sharing" %>% 
     sheet_append(prop_over_time)
   
-  Sys.sleep(10)
+  Sys.sleep(120)
 }

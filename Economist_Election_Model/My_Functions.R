@@ -20,7 +20,7 @@ source("Economist_Functions.R")
 gg.gauge <- function(pos, breaks = c(0, 33, 66, 100), determinent, Biden_win_prob, trump_win_prob) {
   # get time
   t <- Sys.time() %>% as.POSIXct(format(),tz="EST")
-  t_string <- strftime(t,"%I:%M %p",tz = "EST")
+  t_string <- strftime(t,"%I:%M:%S %p",tz = "EST")
   
   get.poly <- function(a, b, r1 = 0.5, r2 = 1.0) {
     th.start <- pi * (1 - a / 100)
@@ -80,21 +80,35 @@ Biden_Gauge_Function <- function(results){
 }
 
 # Table Function ----------------------------------------------------------
-table_function <- function(results) {
-  states <- cbind(state.name,state.abb) %>% as_tibble()
+table_function <- function(results, called) {
+  states <- cbind(state.name,state.abb) %>% as_tibble() 
+  
+  called <- called %>% rename("state.abb"=State) %>% rename("Called"=State_Winner)
   
   table_data <- results$states %>% 
     as_tibble() %>% 
+    left_join(called) %>% 
+    mutate(Called=ifelse(is.na(Called),"",Called)) 
+  
+  table_data$Called <- factor(table_data$Called,
+                              levels=c("Biden",
+                                       "",
+                                       "Trump"),
+                              labels=c("Biden",
+                                       "",
+                                       "Trump"))
+  
+  table_data <- table_data %>% 
     left_join(states) %>%
     mutate(state.name=ifelse(is.na(state.name),
                              state.abb,
                              state.name)) %>% 
-    arrange(desc(value)) %>% 
+    arrange(Called,desc(value)) %>% 
     mutate(value=round(value,1)) %>% 
-    dplyr::select(state.name,value)
+    dplyr::select(state.name,value, Called)
   
   top <- table_data %>% head(nrow(table_data)/2)
-  bottom<- table_data %>% tail(nrow(table_data)/2) %>% rename("state"=state.name,"percent"=value)
+  bottom<- table_data %>% tail(nrow(table_data)/2) %>% rename("state"=state.name,"percent"=value,"Called2"=Called)
   table_data <- cbind(top,bottom)
   
   
@@ -106,7 +120,7 @@ table_function <- function(results) {
     gt() %>% 
     #Setting title
     tab_header(title = "Biden Win Probability by State") %>% 
-    fmt_percent(columns = c(2,4), decimals = 1) %>%
+    fmt_percent(columns = c(2,5), decimals = 1) %>%
     cols_align(align = "center", columns = ) %>%
     tab_options(
       data_row.padding = px(5),
@@ -117,19 +131,24 @@ table_function <- function(results) {
       table.border.bottom.color = "white",
       table.border.bottom.width = px(3),
       heading.align = "center",
-      table.font.size = 13
+      table.font.size = 11
     ) %>% 
-    cols_label(state.name="",value="Win Probability",state="","percent"="Win Probability") %>% 
+    cols_label(state.name="",Called="Winner",value="Win Probability",
+               state="","percent"="Win Probability", Called2="Winner") %>% 
     cols_align(align = "left",
-               columns = c(1,3)) %>%
+               columns = c(1,3,4,6)) %>%
     cols_align(align = "center",
-               columns = c(2,4)) %>% 
+               columns = c(2,5)) %>%
     data_color(
       columns = vars(value,percent),
       colors = scales::col_numeric(
         palette = c("#CB454A", "#2E74C0"),
         domain = c(0,1)
-      ))
+      )) %>% 
+    data_color(
+      columns = vars(Called,Called2),
+      colors = c("#2E74C0","White","#CB454A")
+    )
 }
 
 # Map Function ------------------------------------------------------------
