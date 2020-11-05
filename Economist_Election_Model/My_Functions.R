@@ -48,7 +48,8 @@ gg.gauge <- function(pos, breaks = c(0, 33, 66, 100), determinent, Biden_win_pro
     coord_fixed()+
     theme_bw()+
     labs(
-      title = case_when(Biden_win_prob>=90~"Overall, <span style='color: #2E74C0'>**Biden**</span> is clearly favored to win",
+      title = case_when(Biden_win_prob==100~"Biden has won the 2020 election",
+                        Biden_win_prob<100 & Biden_win_prob>=90~"Overall, <span style='color: #2E74C0'>**Biden**</span> is clearly favored to win",
                         Biden_win_prob<90 & Biden_win_prob>=75~"Overall, <span style='color: #2E74C0'>**Biden**</span> is favored to win",
                         Biden_win_prob<75 & Biden_win_prob>=55~"Overall, <span style='color: #2E74C0'>**Biden**</span> is somewhat favored to win",
                         
