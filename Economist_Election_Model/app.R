@@ -7,7 +7,6 @@ library(googlesheets4)
 source("My_Functions.R")
 
 
-# Define UI for application that draws a histogram
 ui <- fluidPage(
   # avoid greying out plot while recalculating
   tags$style(type="text/css",
@@ -17,7 +16,6 @@ ui <- fluidPage(
   ),
   
   sidebarLayout(
-    # Sidebar with a slider input
     sidebarPanel(width = 4,
                  tags$style(".well {background-color:[white];}"),
                  gt_output("table")

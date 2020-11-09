@@ -82,7 +82,7 @@ table_function <- function(results, called) {
   
   called <- called %>% rename("state.abb"=State) %>% rename("Called"=State_Winner)
   
-  table_data <- results$states %>% 
+  table_data <- results %>% 
     as_tibble() %>% 
     left_join(called) %>% 
     mutate(Called=ifelse(is.na(Called),"",Called)) 
@@ -151,7 +151,7 @@ map_function <- function(results) {
 states <- cbind(state.name,state.abb) %>% as_tibble()
 USA_Map <- read_rds("USA_Map.rds") %>% sf::st_as_sf()
 st_crs(USA_Map) <- "laea"
-map_data <- results$states %>% 
+map_data <- results %>% 
   as_tibble() %>% 
   left_join(states) %>%
   mutate(state.name=ifelse(is.na(state.name),
