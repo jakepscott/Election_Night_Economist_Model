@@ -27,3 +27,9 @@ The table was made using the `gt` package.
 
 #### Line Chart
 While the chart itself was a simple `geom_line`, getting the data for the figure was actually not trivial. I needed to capture how odds had changed throughout the night, even if the app itself wasn't running at a given time. To do this I wrote a local R Script, called LineChartUpdateScript.R, which I kept running almost continuously on my laptop for the days the app was running live. Every 2 minutes this script would read in the data described above on who won which states, input that data into the model, extract the resulting win probabilities, and add a new row to a Google Sheet with those new probabilities and a time stamp. Writing to a Google Sheet was done using `googlesheets4::sheet_append` function. This data was then read into the app every two minutes using the `gsheet2tbl` and `invalidateLater` functions. The line chart would then update and display a new timestamp. 
+
+## Prerequisites
+
+## Author
+
+## Acknowledgements
