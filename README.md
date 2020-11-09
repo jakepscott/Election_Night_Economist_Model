@@ -1,0 +1,10 @@
+# Election Night Live Economist Model
+This repository contains the code for an [application](https://jake-scott.shinyapps.io/Economist_Election_Model) that showed live election odds throughout election night and the subsequent days. It took in data on which states were called for which candidates, fed that into the [Economist election model](https://projects.economist.com/us-2020-forecast/president), and then displayed a set of visualizations to show users how odds had evolved and where they stood at a given time. This was something of a speed-run, as I decided to embark on the project at 9pm on Sunday November 1st, and had it up and running by 7pm on Tuesday November 3rd (despite having work on both Monday and Tuesday)! 
+
+
+## How it worked
+Ideally, I would have had the app scrape a website like the [New York Times](https://www.nytimes.com/interactive/2020/11/03/us/elections/results-president.html) to get information on which states had been called and for which candidate. However, due to time constraints, I was unable to do this. At the same time, it was also impractical to use a static data set, like a CSV. That would have required that I updated the data and redeployed the app each time a state was called. Given that deploying the app even a single time took somewhere between 10 and 15 minutes, that would not have worked on a fast-paced night like election night. 
+
+The solution to the problem came from the `gsheet::gsheet2tbl` function, which allows one to read in data from Google Sheets. This allowed a middle-ground solution between manual and automatic updating in which I manually updated the sheet each time a state was called, but the app automatically read in that data every 10 seconds. 
+
+Each time the data was read in (every 10 seconds), it was fed into the Economist Election Model, and the win probabilities for each state and the nation overall were updated. This  allowed overall and by-state win probabilities to change each time a new state was called and also highlighted the uncertainty/randomness inherent to a probabilistic model, given that the numbers would bounce around slightly even when no new state had been called.  
