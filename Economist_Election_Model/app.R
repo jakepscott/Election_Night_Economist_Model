@@ -98,7 +98,7 @@ server <- function(input, output) {
       geom_line(aes(x=timestamp,y=Win_Prob,color=Candidate),size=2) +
       geom_image(aes(x=max(timestamp),y=current_prob,image=icon), asp =3, size = .03) +
       scale_color_manual(values = c("#2E74C0","#CB454A")) +
-      scale_x_datetime(breaks = date_breaks("2 hour"), labels = date_format("%a %I:%M",
+      scale_x_datetime(breaks = date_breaks("3 hour"), labels = date_format("%a %I:%M",
                                                                             tz = "EST"),
                        guide = guide_axis(n.dodge=2)) +
       scale_y_continuous(breaks = seq(0,100,by = 10), labels = seq(0,100,by=10)) +
