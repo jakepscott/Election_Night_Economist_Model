@@ -45,14 +45,11 @@ server <- function(input, output) {
   })
   
   Called <-  reactive({
-    invalidateLater(10000)
-    gsheet2tbl("https://docs.google.com/spreadsheets/d/1ZPvodyP0oWZe6PqKs2UfjuXIj1c8OXZqI6FyeH-fOl4/edit?usp=sharing")
+    read_rds("Called_States.rds")
   })
   
   Line_Chart <- reactive({
-    invalidateLater(10000)
-    gsheet2tbl("https://docs.google.com/spreadsheets/d/1yQo7vkCQ7F6aMyelJvkKS32RfTGYtA8X1z8s9OKX4sU/edit#gid=1482552590") %>% 
-      mutate(timestamp=as.POSIXct(timestamp))
+    read_rds("Line_Chart_Data.rds")
   })
   
 
