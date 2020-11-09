@@ -10,10 +10,6 @@ library(ggimage)
 library(readr)
 library(sf)
 
-# Get economist functions -----------------------------------------------------------
-source("Economist_Functions.R")
-
-
 
 # General Gauge Function --------------------------------------------------
 
