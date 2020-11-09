@@ -31,5 +31,6 @@ While the chart itself was a simple `geom_line`, getting the data for the figure
 ## Prerequisites
 
 ## Author
+* **Jake Scott** - [Twitter](https://twitter.com/jakepscott2020), [Medium](https://medium.com/@jakepscott16)
 
 ## Acknowledgements
