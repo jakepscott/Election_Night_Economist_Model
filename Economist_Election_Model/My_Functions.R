@@ -75,8 +75,8 @@ gg.gauge <- function(pos, breaks = c(0, 33, 66, 100), determinent, Biden_win_pro
 
 # Biden Gauge Function ----------------------------------------------------------
 Biden_Gauge_Function <- function(results){
-  biden_win_prob <- results$nation$biden_win_prob
-  trump_win_prob <- 100-results$nation$biden_win_prob
+  biden_win_prob <- 100
+  trump_win_prob <- 0
   gg.gauge(pos=round(biden_win_prob,1),determinent = round(biden_win_prob,1), Biden_win_prob=biden_win_prob, trump_win_prob=trump_win_prob)
 }
 
