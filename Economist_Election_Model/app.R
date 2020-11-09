@@ -41,12 +41,7 @@ ui <- fluidPage(
 server <- function(input, output) {
   #Reative Values
   Data <- reactive({
-    invalidateLater(10000)
-    sheet <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1ZPvodyP0oWZe6PqKs2UfjuXIj1c8OXZqI6FyeH-fOl4/edit?usp=sharing")
-    Biden_Wins <- sheet %>% filter(State_Winner=="Biden") %>% pull(State)
-    Trump_Wins <- sheet %>% filter(State_Winner=="Trump") %>% pull(State)
-    results <- update_prob_for_viz(biden_states = Biden_Wins,trump_states = Trump_Wins)
-    results
+    read_rds("results_by_state.rds")
   })
   
   Called <-  reactive({
