@@ -2,12 +2,15 @@ library(shiny)
 library(plotly)
 library(gsheet)
 library(googlesheets4)
+library(shinyalert)
 
 #setwd("C:/Users/Jake Scott/Desktop/R Projects/Election_Night_Economist_Model")
 source("My_Functions.R")
 
 
 ui <- fluidPage(
+  #Enabling shiny alerts
+  useShinyalert(),
   # avoid greying out plot while recalculating
   tags$style(type="text/css",
              ".recalculating {opacity: 1.0;};
@@ -37,6 +40,22 @@ ui <- fluidPage(
 
 # Server Side -------------------------------------------------------------
 server <- function(input, output) {
+  shinyalert(
+    title = "Warning!",
+    text = "This app no longer automatically updates. It is essentially a screenshot of what the app looked like on Saturday November 7th when the race was called.",
+    #size = "l", 
+    closeOnEsc = TRUE,
+    closeOnClickOutside = TRUE,
+    html = FALSE,
+    type = "info",
+    showConfirmButton = TRUE,
+    showCancelButton = FALSE,
+    confirmButtonText = "Got it!",
+    confirmButtonCol = "#2E74C0",
+    timer = 0,
+    imageUrl = "",
+    animation = TRUE
+  )
   #Reative Values
   Data <- reactive({
     read_rds("results_by_state.rds")
