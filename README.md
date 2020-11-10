@@ -1,7 +1,7 @@
 # Election Night Live Economist Model
 This repository contains the code for an [application](https://jake-scott.shinyapps.io/Economist_Election_Model) that showed live election odds throughout election night and the subsequent days. It took in data on which states were called for which candidates, fed that into the [Economist election model](https://projects.economist.com/us-2020-forecast/president), and then displayed a set of visualizations to show users how odds had evolved and where they stood at a given time. This was something of a speed-run, as I decided to embark on the project at 9pm on Sunday November 1st, and had it up and running by 7pm on Tuesday November 3rd (despite having work on both Monday and Tuesday)! 
 
-Note: The app is no longer automatically reading in data and updating numbers. It is instead a essentially a "snapshot" of what the app looked like when the race was finally called. 
+Note: The app is no longer automatically reading in data and updating numbers. It is instead a essentially a "snapshot" of what the app looked like when the race was finally called. The code for this snap shot (the current app) can be found in the Economist_Election_Model directory. The original app from election night, which used automatic updating, can be found in the Original_App directory.
 
 ![image](https://user-images.githubusercontent.com/56490913/98498984-4825e500-2216-11eb-9875-20ba05c8237b.png)
 
